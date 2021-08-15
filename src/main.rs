@@ -17,9 +17,10 @@ fn get_sink(pactl: String) -> String {
         // println!("1{}", line);
         if line.contains("Sink Input #") {
             sink = &line[12..];
-        } else if line.contains("application.name = spotify")
-            || line.contains("application.name = Spotify")
+        } else if line.contains("application.name = \"spotify\"")
+            || line.contains("application.name = \"Spotify\"")
         {
+            println!("found");
             break;
         }
     }
