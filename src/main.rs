@@ -20,7 +20,7 @@ fn get_sink(pactl: String) -> String {
         } else if line.contains("application.name = \"spotify\"")
             || line.contains("application.name = \"Spotify\"")
         {
-            println!("found");
+            // println!("found");
             break;
         }
     }
