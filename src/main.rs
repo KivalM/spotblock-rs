@@ -34,6 +34,7 @@ fn unmute(sink: String) {
 }
 fn main() {
     let mut muted = false;
+    println!("Now Muting ADs");
     loop {
         let mut response =
             run_cmd("playerctl --player=spotify metadata --format '{{ title }}-{{ artist }}'");
