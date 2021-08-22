@@ -11,7 +11,8 @@ fn run_cmd(cmd: &str) -> String {
     )
     .unwrap()
 }
-fn get_sink(pactl: String) -> String {
+fn get_sinks(pactl: String) -> Vec<String> {
+    let mut sinks: Vec<String> = Vec::new();
     let mut sink = "";
     for line in pactl.split("\n") {
         // println!("1{}", line);
@@ -21,16 +22,20 @@ fn get_sink(pactl: String) -> String {
             || line.contains("application.name = \"Spotify\"")
         {
             // println!("found");
-            break;
+            sinks.push(sink.to_string());
         }
     }
-    return sink.to_string();
+    return sinks;
 }
-fn mute(sink: String) {
-    run_cmd(format!("pactl set-sink-input-mute {} 1", &sink).as_str());
+fn mute(sinks: Vec<String>) {
+    for sink in sinks {
+        run_cmd(format!("pactl set-sink-input-mute {} 1", &sink).as_str());
+    }
 }
-fn unmute(sink: String) {
-    run_cmd(format!("pactl set-sink-input-mute {} 0", &sink).as_str());
+fn unmute(sinks: Vec<String>) {
+    for sink in sinks {
+        run_cmd(format!("pactl set-sink-input-mute {} 0", &sink).as_str());
+    }
 }
 fn main() {
     let mut muted = false;
@@ -44,18 +49,18 @@ fn main() {
                 // if not muted and is an ad
                 // mute
                 response = run_cmd("pactl list sink-inputs");
-                let sink = get_sink(response);
+                let sink = get_sinks(response);
                 mute(sink.to_owned());
-                println!("Muted Sink {}", sink);
+                println!("Muted Sinks {:?}", sink);
                 muted = true;
             }
         } else if muted == true {
             // if muted and is a song thats not an ad
             // unmute
             response = run_cmd("pactl list sink-inputs");
-            let sink = get_sink(response);
+            let sink = get_sinks(response);
             unmute(sink.to_owned());
-            println!("Unmuted Sink {}", sink);
+            println!("Unmuted Sinks {:?}", sink);
             muted = false;
         }
 
