@@ -1,4 +1,4 @@
-# a little program to mute ads in spotify via pulseaudio written in rust
+# Spotify advertisement muter for \*nix
 
 ## Information
 
@@ -7,25 +7,20 @@
 
 ## Installation
 
-It requires [playerctl](https://github.com/altdesktop/playerctl) and pactl command line tools.
+- install [rust](https://www.rust-lang.org/tools/install)
+- Install [playerctl](https://github.com/altdesktop/playerctl)
+- Ensure you have `pactl` installed (run `pactl` in a terminal to check)
+
+- download the files from github
+  `git clone https://github.com/StarPlatin4m/spotblock-rs`
+
+- enter the programs directory
+  `cd spotblock-rs`
+
+- Install
+  `./install.sh`
 
 ## Running
 
-download the files from github
-
-run
-
-```
-cargo run --release
-```
-
-copy the executable from /target/ to a folder of your choice and run it
-
-```
-./spotblock-rs
-```
-
-## todo
-
-- add systemctl service
-- optimise (although it should be barely noticable as is)
+- Now spotblock should be available from your application menu, this will run spotify and start spotblock, and then kill spotblock after you close it
+- alternatively run `spotblock-run` from a terminal to run spotify with adblocking as well
