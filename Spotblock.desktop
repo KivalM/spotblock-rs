@@ -13,7 +13,7 @@ Name=Spotblock
 Comment=Launch spotify with blocked ads
 
 # The path to the folder in which the executable is run
-Path=/usr/local/bin/
+Path=/usr/bin/
 
 # The executable of the application, possibly with arguments.
 Exec=spotblock-run
