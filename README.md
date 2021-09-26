@@ -1,5 +1,7 @@
 # Spotify advertisement muter for \*nix
 
+For arch users AUR link [spotblock-rs](https://aur.archlinux.org/packages/spotblock-rs/)
+
 ## Information
 
 - works with pipewire
@@ -23,4 +25,4 @@
 ## Running
 
 - Now spotblock should be available from your application menu, this will run spotify and start spotblock, and then kill spotblock after you close it
-- alternatively run `spotblock-run` from a terminal to run spotify with adblocking as well
+- alternatively run `spotblock-run` from a terminal to run spotify with ad muting enabled
