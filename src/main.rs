@@ -44,8 +44,12 @@ fn main() {
         let mut response =
             run_cmd("playerctl --player=spotify metadata --format '{{ title }}-{{ artist }}'");
         response.pop();
-        if response == "Advertisement-" || response == "advertisement-" || response == "Spotify-" || response == "spotify-" {
-            if muted == false {
+        if response == "Advertisement-"
+            || response == "advertisement-"
+            || response == "Spotify-"
+            || response == "spotify-"
+        {
+            if !muted {
                 // if not muted and is an ad
                 // mute
                 response = run_cmd("pactl list sink-inputs");
@@ -54,7 +58,7 @@ fn main() {
                 println!("Muted Sinks {:?}", sink);
                 muted = true;
             }
-        } else if muted == true {
+        } else if muted {
             // if muted and is a song thats not an ad
             // unmute
             response = run_cmd("pactl list sink-inputs");
