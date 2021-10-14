@@ -44,7 +44,7 @@ fn main() {
         let mut response =
             run_cmd("playerctl --player=spotify metadata --format '{{ title }}-{{ artist }}'");
         response.pop();
-        if response == "Advertisement-" || response == "advertisement-" {
+        if response == "Advertisement-" || response == "advertisement-" || response == "Spotify-" || response == "spotify-" {
             if muted == false {
                 // if not muted and is an ad
                 // mute
