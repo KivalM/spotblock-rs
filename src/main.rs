@@ -20,6 +20,8 @@ fn get_sinks(pactl: String) -> Vec<String> {
             sink = &line[12..];
         } else if line.contains("application.name = \"spotify\"")
             || line.contains("application.name = \"Spotify\"")
+            || line.contains("application.process.binary = \"spotify\"")
+            || line.contains("application.process.binary = \"Spotify\"")
         {
             // println!("found");
             sinks.push(sink.to_string());
@@ -54,6 +56,9 @@ fn main() {
                 // mute
                 response = run_cmd("pactl list sink-inputs");
                 let sink = get_sinks(response);
+                if sink.is_empty() {
+                    continue;
+                }
                 mute(sink.to_owned());
                 println!("Muted Sinks {:?}", sink);
                 muted = true;
@@ -63,6 +68,9 @@ fn main() {
             // unmute
             response = run_cmd("pactl list sink-inputs");
             let sink = get_sinks(response);
+            if sink.is_empty() {
+                continue;
+            }
             unmute(sink.to_owned());
             println!("Unmuted Sinks {:?}", sink);
             muted = false;
