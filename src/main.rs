@@ -14,7 +14,7 @@ fn run_cmd(cmd: &str) -> String {
 fn get_sinks(pactl: String) -> Vec<String> {
     let mut sinks: Vec<String> = Vec::new();
     let mut sink = "";
-    for line in pactl.split("\n") {
+    for line in pactl.split('\n') {
         // println!("1{}", line);
         if line.contains("Sink Input #") {
             sink = &line[12..];
@@ -27,7 +27,7 @@ fn get_sinks(pactl: String) -> Vec<String> {
             sinks.push(sink.to_string());
         }
     }
-    return sinks;
+    sinks
 }
 fn mute(sinks: Vec<String>) {
     for sink in sinks {
@@ -40,8 +40,24 @@ fn unmute(sinks: Vec<String>) {
     }
 }
 fn main() {
+    let wait = time::Duration::from_secs(1);
+    // wait until spotify is open and unmute it
+    // in case the blocker was closed while muted previously
+    println!("Waiting for Spotify to start playing");
+    loop {
+        let response = run_cmd("pactl list sink-inputs");
+        let sink = get_sinks(response);
+        if sink.is_empty() {
+            thread::sleep(wait);
+            continue;
+        }
+        unmute(sink);
+        println!("Unmuted Spotify");
+        break;
+    }
+
     let mut muted = false;
-    println!("Now Muting ADs");
+    println!("Now Muting Advertisements");
     loop {
         let mut response =
             run_cmd("playerctl --player=spotify metadata --format '{{ title }}-{{ artist }}'");
@@ -78,7 +94,7 @@ fn main() {
 
         // wait 1 second
         // can reduce this to make it so that it is more accurate
-        let wait = time::Duration::from_secs(1);
+
         thread::sleep(wait);
     }
 }
