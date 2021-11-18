@@ -1,5 +1,7 @@
 use std::process::Command;
 use std::{thread, time};
+
+// function that runs a command
 fn run_cmd(cmd: &str) -> String {
     String::from_utf8(
         Command::new("sh")
@@ -11,11 +13,13 @@ fn run_cmd(cmd: &str) -> String {
     )
     .unwrap()
 }
-fn get_sinks(pactl: String) -> Vec<String> {
+
+// function that checks the pactl output and
+// returns all the pulseaudio sinks associated to spotify
+fn get_sinks(pactl: &str) -> Vec<String> {
     let mut sinks: Vec<String> = Vec::new();
     let mut sink = "";
     for line in pactl.split('\n') {
-        // println!("1{}", line);
         if line.contains("Sink Input #") {
             sink = &line[12..];
         } else if line.contains("application.name = \"spotify\"")
@@ -23,77 +27,83 @@ fn get_sinks(pactl: String) -> Vec<String> {
             || line.contains("application.process.binary = \"spotify\"")
             || line.contains("application.process.binary = \"Spotify\"")
         {
-            // println!("found");
             sinks.push(sink.to_string());
         }
     }
     sinks
 }
+
+// mutes a vector of sinks
 fn mute(sinks: Vec<String>) {
     for sink in sinks {
         run_cmd(format!("pactl set-sink-input-mute {} 1", &sink).as_str());
     }
 }
+
+// unmutes a vector of sinks
 fn unmute(sinks: Vec<String>) {
     for sink in sinks {
         run_cmd(format!("pactl set-sink-input-mute {} 0", &sink).as_str());
     }
 }
 fn main() {
+    // set wait duration to 1 second
+    // can reduce this to make it so that it is more accurate
     let wait = time::Duration::from_secs(1);
+
     // wait until spotify is open and unmute it
     // in case the blocker was closed while muted previously
     println!("Waiting for Spotify to start playing");
     loop {
         let response = run_cmd("pactl list sink-inputs");
-        let sink = get_sinks(response);
+        let sink = get_sinks(&response);
+
+        // wait until spotify sink is detected
         if sink.is_empty() {
             thread::sleep(wait);
             continue;
         }
+
+        // unmute
         unmute(sink);
         println!("Unmuted Spotify");
         break;
     }
 
+    // set default state muted to false
     let mut muted = false;
     println!("Now Muting Advertisements");
+
+    // start infinite loop
     loop {
+        // query playerctl for the track-id
         let mut response =
-            run_cmd("playerctl --player=spotify metadata --format '{{ title }}-{{ artist }}'");
+            run_cmd("playerctl --player=spotify metadata --format '{{mpris:trackid}}'");
+        // remove trailing newline
         response.pop();
-        if response == "Advertisement-"
-            || response == "advertisement-"
-            || response == "Spotify-"
-            || response == "spotify-"
-        {
-            if !muted {
-                // if not muted and is an ad
-                // mute
-                response = run_cmd("pactl list sink-inputs");
-                let sink = get_sinks(response);
-                if sink.is_empty() {
-                    continue;
-                }
-                mute(sink.to_owned());
-                println!("Muted Sinks {:?}", sink);
-                muted = true;
-            }
-        } else if muted {
-            // if muted and is a song thats not an ad
-            // unmute
-            response = run_cmd("pactl list sink-inputs");
-            let sink = get_sinks(response);
-            if sink.is_empty() {
-                continue;
-            }
+
+        // get spotify sinks
+        // if this is empty it means spotify isnt open
+        // probably
+        let pactl = run_cmd("pactl list sink-inputs");
+        let sink = get_sinks(&pactl);
+
+        if sink.is_empty() {
+            thread::sleep(wait);
+            continue;
+        }
+        let ad = response.starts_with("spotify:ad:");
+        if ad && !muted {
+            // if not muted and is an ad then mute
+            mute(sink.to_owned());
+            println!("Muted Sinks {:?}", sink);
+            muted = true;
+        } else if muted && !ad {
+            // if muted and is a song thats not an ad then unmute
             unmute(sink.to_owned());
             println!("Unmuted Sinks {:?}", sink);
             muted = false;
         }
-
-        // wait 1 second
-        // can reduce this to make it so that it is more accurate
 
         thread::sleep(wait);
     }

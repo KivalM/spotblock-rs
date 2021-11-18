@@ -12,13 +12,10 @@ For arch users AUR link [spotblock-rs](https://aur.archlinux.org/packages/spotbl
 - install [rust](https://www.rust-lang.org/tools/install)
 - Install [playerctl](https://github.com/altdesktop/playerctl)
 - Ensure you have `pactl` installed (run `pactl` in a terminal to check)
-
 - download the files from github
   `git clone https://github.com/StarPlatin4m/spotblock-rs`
-
 - enter the programs directory
   `cd spotblock-rs`
-
 - Install
   `./install.sh`
 
@@ -26,3 +23,7 @@ For arch users AUR link [spotblock-rs](https://aur.archlinux.org/packages/spotbl
 
 - Now spotblock should be available from your application menu, this will run spotify and start spotblock, and then kill spotblock after you close it
 - alternatively run `spotblock-run` from a terminal to run spotify with ad muting enabled
+
+## Disclaimer
+
+This set of code is purely for educational purposes. What you do with the code and any repurcussions is entirely your responsibility.
