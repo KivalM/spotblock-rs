@@ -79,6 +79,7 @@ fn main() {
         // query playerctl for the track-id
         let mut response =
             run_cmd("playerctl --player=spotify metadata --format '{{mpris:trackid}}'");
+
         // remove trailing newline
         response.pop();
 
@@ -92,7 +93,9 @@ fn main() {
             thread::sleep(wait);
             continue;
         }
-        let ad = response.starts_with("spotify:ad:");
+        // check conditions for an ad playing
+        let ad = response.starts_with("spotify:ad:") || response.is_empty();
+
         if ad && !muted {
             // if not muted and is an ad then mute
             mute(sink.to_owned());

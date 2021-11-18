@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git add .
-git commit -m "Use trackid for detecting ads, code restructure"
+git commit -m "fixed potential trackid error"
 git push
 
 cd AUR
