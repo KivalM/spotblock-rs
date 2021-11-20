@@ -23,7 +23,7 @@ For arch users AUR link [spotblock-rs](https://aur.archlinux.org/packages/spotbl
 
 - Now spotblock should be available from your application menu, this will run spotify and start spotblock, and then kill spotblock after you close it
 - alternatively run `spotblock-run` from a terminal to run spotify with ad muting enabled
-
+- and run `spotblock-rs` from a terminal to run just the adblocker
 ## Disclaimer
 
 This set of code is purely for educational purposes. What you do with the code and any repurcussions is entirely your responsibility.
