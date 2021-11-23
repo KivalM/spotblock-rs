@@ -13,7 +13,7 @@ For arch users AUR link [spotblock-rs](https://aur.archlinux.org/packages/spotbl
 - Install [playerctl](https://github.com/altdesktop/playerctl)
 - Ensure you have `pactl` installed (run `pactl` in a terminal to check)
 - download the files from github
-  `git clone https://github.com/StarPlatin4m/spotblock-rs`
+  `git clone https://github.com/egggod/spotblock-rs`
 - enter the programs directory
   `cd spotblock-rs`
 - Install
