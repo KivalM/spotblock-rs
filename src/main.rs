@@ -94,7 +94,7 @@ fn main() {
             continue;
         }
         // check conditions for an ad playing
-        let ad = response.find("ad/") != None || response.is_empty();
+        let ad = response.starts_with("spotify:ad:") || response.starts_with("/com/spotify/ad/") || response.is_empty(); 
 
         if ad && !muted {
             // if not muted and is an ad then mute
